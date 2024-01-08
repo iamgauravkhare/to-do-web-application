@@ -1,0 +1,80 @@
+.showToDo {
+  width: 55%;
+  height: 610px;
+  border-radius: 10px;
+  padding: 20px;
+  gap: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  color: var(--primaryColor);
+  background-color: var(--backgroundColor);
+}
+
+.toDoCardCtn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  padding: 10px;
+  gap: 10px;
+  overflow: hidden;
+  overflow-y: scroll;
+  scroll-behavior: smooth;
+}
+
+.taskCtn {
+  height: 400px;
+  width: 300px;
+  border-radius: 10px;
+  background-color: var(--secondaryColor);
+  padding: 15px;
+  display: flex;
+  gap: 15px;
+  overflow: hidden;
+  justify-content: space-between;
+  flex-direction: column;
+}
+
+.cardNav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 10%;
+}
+
+.taskCtn > p {
+  overflow: hidden;
+  overflow-y: scroll;
+  text-overflow: ellipsis;
+  word-wrap: break-word;
+  height: 80%;
+  margin: 0;
+}
+
+.toDoCardCtn::-webkit-scrollbar {
+  /* width: 5px; */
+  display: none;
+}
+
+/* Track */
+.toDoCardCtn::-webkit-scrollbar-track {
+  background: var(--secondaryColor);
+}
+
+/* Handle */
+.toDoCardCtn::-webkit-scrollbar-thumb {
+  background: var(--primaryColor);
+}
+
+/* Handle on hover */
+.toDoCardCtn::-webkit-scrollbar-thumb:hover {
+  background: var(--hoverColor);
+}
+
+@media only screen and (max-width: 450px) {
+  .showToDo {
+    width: 100%;
+  }
+}
