@@ -4,12 +4,13 @@ const ErrorHandler = require("./utils/errorHandler");
 const cors = require("cors");
 const allowedOrigins = [
   "http://localhost:3000",
-  "https://dailydoer-web-application-frontend.vercel.app",
-  "https://dailydoer-web-application-frontend-iamgauravkhare.vercel.app",
-  "https://dailydoer-web-application-frontend-git-master-iamgauravkhare.vercel.app",
+  "https://daily-doer.vercel.app",
+  "https://daily-doer-iamgauravkhare.vercel.app",
+  "https://daily-doer-git-master-iamgauravkhare.vercel.app",
+  "https://*.onrender.com",
 ];
 const corsOptions = {
-  origin: true,
+  origin: allowedOrigins,
   credentials: true,
   exposedHeaders: "Set-Cookie",
   // allowedHeaders: [
