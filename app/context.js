@@ -18,7 +18,6 @@ const CentralisedData = (props) => {
   );
 
   useEffect(() => {
-    console.log("Context chala");
     dispatch(addLoading());
     dispatch(asyncGetUserAuthenticated(router));
   }, []);

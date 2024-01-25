@@ -25,7 +25,6 @@ const Dashboard = () => {
   const { loading, isAuthenticated } = useSelector((state) => state.userSlice);
 
   useEffect(() => {
-    console.log("Dashboard Chala");
     dispatch(removeLoading());
   }, []);
 
