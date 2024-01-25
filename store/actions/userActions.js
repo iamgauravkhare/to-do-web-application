@@ -98,16 +98,15 @@ export const asyncGetUserAuthenticated =
       if (data.success === true) {
         await dispatch(asyncGetUserData());
         router.push("/dashboard");
-        setTimeout(() => {
-          console.log("Timeout chala");
-          dispatch(removeLoading());
-        }, 2000);
+        // setTimeout(() => {
+        // }, 2000);
       } else {
         dispatch(removeLoading());
       }
     } catch (error) {
       dispatch(addError(error.response.data.message));
     }
+    dispatch(removeLoading());
   };
 
 export const asyncUpdateProfileDetails =
