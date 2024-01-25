@@ -3,39 +3,16 @@ import {
   asyncUploadProfileImage,
   asyncUserDeleteAccount,
 } from "@/store/actions/userActions";
+import { addLoading } from "@/store/reducers";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 const Profile = () => {
   const elemRef = useRef(null);
-  const [
-    showSignIn,
-    setShowSignIn,
-    showLandingPageHeading,
-    setShowLandingPageHeading,
-    showSignUp,
-    setShowSignUp,
-    showForgetPassword,
-    setShowForgetPassword,
-    showSetForgetPassword,
-    setShowSetForgetPassword,
-    illustration,
-    setIllustration,
-    profile,
-    setProfile,
-    editProfile,
-    setEditProfile,
-    resetPassword,
-    setResetPassword,
-    showToDo,
-    setShowToDo,
-    createToDo,
-    setCreateToDo,
-    showIllusCtn,
-    setShowIllusCtn,
-  ] = useContext(centralisedData);
-
+  const { setProfile, setResetPassword } = useContext(centralisedData);
+  const router = useRouter();
   const dispatch = useDispatch();
   const [uploadProfileForm, setUploadProfileForm] = useState(true);
   const [imageInputTrigger, setImageInputTrigger] = useState(null);
@@ -43,11 +20,16 @@ const Profile = () => {
   const [profileCard, setProfileCard] = useState(false);
   const { userData, isAuthenticated } = useSelector((state) => state.userSlice);
   const deleteAccountHandler = () => {
-    dispatch(asyncUserDeleteAccount());
+    dispatch(addLoading());
+    dispatch(asyncUserDeleteAccount(router));
   };
   const uploadProfileFormHandler = () => {
     setProfileCard(true);
     setUploadProfileForm(false);
+  };
+  const closeUploadProfileFormHandler = () => {
+    setProfileCard(false);
+    setUploadProfileForm(true);
   };
   const resetPasswordFormHandler = () => {
     setProfile(null);
@@ -63,6 +45,7 @@ const Profile = () => {
   }, [imageInputTrigger]);
 
   const submitHandler = (e) => {
+    dispatch(addLoading());
     e.preventDefault();
     const profileImageData = new FormData(e.target);
     profileImageData.set("profileImage", e.target.profileImage.files[0]);
@@ -70,6 +53,7 @@ const Profile = () => {
     setProfileCard(false);
     setUploadProfileForm(true);
   };
+
   return (
     <>
       <div className="profile-ctn">
@@ -127,6 +111,17 @@ const Profile = () => {
                 </button>
               </div>
               <input type="submit" className="form-btn" value="Upload Image" />
+              <div className="my-form-actions">
+                <h6 className="my-form-signup">
+                  <button
+                    className="forget-btn underline"
+                    onClick={closeUploadProfileFormHandler}
+                    type="button"
+                  >
+                    Cancel
+                  </button>
+                </h6>
+              </div>
             </div>
           </form>
         </div>

@@ -13,3 +13,4 @@ export { asyncUpdateTask } from "./userActions";
 export { asyncDeleteTask } from "./userActions";
 export { asyncUserSignOut } from "./userActions";
 export { asyncUserDeleteAccount } from "./userActions";
+export { asyncMarkTaskCompleted } from "./userActions";

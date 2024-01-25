@@ -1,36 +1,53 @@
 .showToDo {
-  width: 55%;
-  height: 610px;
+  width: 100%;
+  /* height: 610px; */
   border-radius: 10px;
   padding: 20px;
   gap: 20px;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
+  align-items: start;
+  /* justify-content: flex-start; */
   color: var(--primaryColor);
   background-color: var(--backgroundColor);
+  border: 2px solid black;
 }
 
 .toDoCardCtn {
+  border: 2px solid black;
+  width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-wrap: wrap;
   padding: 10px;
   gap: 10px;
-  overflow: hidden;
-  overflow-y: scroll;
-  scroll-behavior: smooth;
+  /* overflow: hidden; */
+  /* overflow-y: scroll; */
+  /* scroll-behavior: smooth; */
+}
+
+.dateCtn {
+  width: 100%;
+  border: 2px solid red;
+}
+
+.dateTaskCtn {
+  padding: 20px;
+  width: 100%;
+  columns: 3;
+  gap: 20px;
+  border: 2px solid red;
 }
 
 .taskCtn {
-  height: 400px;
-  width: 300px;
+  /* height: 400px; */
+  /* width: 300px; */
   border-radius: 10px;
   background-color: var(--secondaryColor);
   padding: 15px;
   display: flex;
+  margin-bottom: 20px;
   gap: 15px;
   overflow: hidden;
   justify-content: space-between;
@@ -41,16 +58,16 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 10%;
+  /* height: 10%; */
 }
 
 .taskCtn > p {
-  overflow: hidden;
+  /* overflow: hidden;
   overflow-y: scroll;
   text-overflow: ellipsis;
-  word-wrap: break-word;
-  height: 80%;
-  margin: 0;
+  word-wrap: break-word; */
+  /* height: 80%; */
+  /* margin: 0; */
 }
 
 .toDoCardCtn::-webkit-scrollbar {

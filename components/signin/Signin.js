@@ -1,23 +1,22 @@
 import { centralisedData } from "@/app/context";
 import { asyncUserSignIn } from "@/store/actions";
+import { addLoading } from "@/store/reducers";
+import { useRouter } from "next/navigation";
 import { useContext } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 
 const Signin = () => {
   const dispatch = useDispatch();
-  const [
-    showSignIn,
+  const router = useRouter();
+
+  const {
     setShowSignIn,
-    showLandingPageHeading,
     setShowLandingPageHeading,
-    showSignUp,
     setShowSignUp,
-    showForgetPassword,
     setShowForgetPassword,
-    showSetForgetPassword,
     setShowSetForgetPassword,
-  ] = useContext(centralisedData);
+  } = useContext(centralisedData);
 
   const showForgetPasswordHandler = () => {
     window.scrollTo(0, 0);
@@ -38,12 +37,13 @@ const Signin = () => {
   };
 
   const submitHandler = (e) => {
+    dispatch(addLoading());
     e.preventDefault();
     const signInData = {
       email: `${e.target.email.value}`,
       password: `${e.target.password.value}`,
     };
-    dispatch(asyncUserSignIn(signInData));
+    dispatch(asyncUserSignIn(signInData, router));
   };
 
   const googleSignIn = () => {
@@ -52,10 +52,10 @@ const Signin = () => {
 
   return (
     <>
-      <div className="form-ctn">
-        <div className="whole-form-wrapper">
-          <form className="form" onSubmit={submitHandler} autoComplete="off">
-            <button className="form-btn" type="button" onClick={googleSignIn}>
+      <div className="w-full md:w-[50%] lg:w-[50%] flex items-center justify-center">
+        <div className="w-full md:w-[80%] lg:w-[55%] p-5 md:p-6 lg:p-7 rounded-lg bg-backgroundColor">
+          <form className="w-full" onSubmit={submitHandler} autoComplete="off">
+            {/* <button className="form-btn" type="button" onClick={googleSignIn}>
               <img src="/googleLogo.png" alt="Google" />
               Sign In With Google
             </button>
@@ -63,9 +63,11 @@ const Signin = () => {
               <div className="dividerline"></div>
               Or
               <div className="dividerline"></div>
-            </div>
-            <div className="form-wrapper">
-              <h6 className="form-heading">Sign In Your Account</h6>
+            </div> */}
+            <div className="flex flex-col gap-4 w-full">
+              <h6 className="text-center text-xl font-semibold">
+                Sign In Your Account
+              </h6>
               <div className="text-field">
                 <label htmlFor="email">Email</label>
                 <input
@@ -113,7 +115,7 @@ const Signin = () => {
                 <h6 className="my-form-signup">
                   Dont have account ?
                   <button
-                    className="forget-btn"
+                    className="forget-btn underline"
                     onClick={showSignUpHandler}
                     type="button"
                   >

@@ -10,5 +10,6 @@ exports.generateError = (err, req, res, next) => {
     message: err.message,
     errName: err.name,
     stack: err.stack,
+    success: false,
   });
 };

@@ -1,5 +1,6 @@
-import { asyncGetUserAuthenticated, asyncGetUserData } from "@/store/actions";
+import { asyncGetUserAuthenticated } from "@/store/actions";
 import {
+  addLoading,
   removeError,
   removeLoading,
   removeNotification,
@@ -17,11 +18,9 @@ const CentralisedData = (props) => {
   );
 
   useEffect(() => {
-    const fetchData = async () => {
-      const response = await dispatch(asyncGetUserAuthenticated());
-      response && (await dispatch(asyncGetUserData()));
-    };
-    fetchData();
+    console.log("Context chala");
+    dispatch(addLoading());
+    dispatch(asyncGetUserAuthenticated(router));
   }, []);
 
   useEffect(() => {
@@ -42,15 +41,6 @@ const CentralisedData = (props) => {
     }
   }, [notification]);
 
-  useEffect(() => {
-    if (isAuthenticated) {
-      router.push("/dashboard");
-      dispatch(removeLoading());
-    } else {
-      router.push("/");
-    }
-  }, [isAuthenticated]);
-
   const [showLandingPageHeading, setShowLandingPageHeading] = useState(true);
   const [showSignIn, setShowSignIn] = useState(null);
   const [showSignUp, setShowSignUp] = useState(null);
@@ -59,7 +49,7 @@ const CentralisedData = (props) => {
   const [illustration, setIllustration] = useState(
     "/landingPageIllustration.png"
   );
-  const [profile, setProfile] = useState(null);
+  const [profile, setProfile] = useState(true);
   const [editProfile, setEditProfile] = useState(null);
   const [resetPassword, setResetPassword] = useState(null);
   const [showToDo, setShowToDo] = useState(true);
@@ -70,7 +60,7 @@ const CentralisedData = (props) => {
   return (
     <>
       <centralisedData.Provider
-        value={[
+        value={{
           showSignIn,
           setShowSignIn,
           showLandingPageHeading,
@@ -97,7 +87,7 @@ const CentralisedData = (props) => {
           setShowIllusCtn,
           darkMode,
           setDarkMode,
-        ]}
+        }}
       >
         {props.children}
       </centralisedData.Provider>

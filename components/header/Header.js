@@ -4,48 +4,32 @@ import { useContext, useState } from "react";
 import { centralisedData } from "@/app/context";
 import { useDispatch, useSelector } from "react-redux";
 import { asyncUserSignOut } from "@/store/actions";
+import { useRouter } from "next/navigation";
 
 const Header = () => {
   const dispatch = useDispatch();
+  const router = useRouter();
   const [slidingNavbar, setSlidingNavbar] = useState(false);
   const { isAuthenticated } = useSelector((state) => state.userSlice);
-  const [
-    showSignIn,
-          setShowSignIn,
-          showLandingPageHeading,
-          setShowLandingPageHeading,
-          showSignUp,
-          setShowSignUp,
-          showForgetPassword,
-          setShowForgetPassword,
-          showSetForgetPassword,
-          setShowSetForgetPassword,
-          illustration,
-          setIllustration,
-          profile,
-          setProfile,
-          editProfile,
-          setEditProfile,
-          resetPassword,
-          setResetPassword,
-          showToDo,
-          setShowToDo,
-          createToDo,
-          setCreateToDo,
-          showIllusCtn,
-          setShowIllusCtn,
-          darkMode,
-          setDarkMode,
-  ] = useContext(centralisedData);
+  const {
+    setShowSignIn,
+    setShowLandingPageHeading,
+    setShowSignUp,
+    setShowForgetPassword,
+    setShowSetForgetPassword,
+    setIllustration,
+    setProfile,
+    setResetPassword,
+  } = useContext(centralisedData);
 
   const showHomeHandler = () => {
     window.scrollTo(0, 0);
+    setIllustration("/landingPageIllustration.png");
     setSlidingNavbar(false);
     setShowSignIn(null);
     setShowSignUp(null);
     setShowForgetPassword(null);
     setShowSetForgetPassword(null);
-    setIllustration("/landingPageIllustration.png");
     setShowLandingPageHeading(true);
   };
 
@@ -72,39 +56,28 @@ const Header = () => {
   };
 
   const signOutHandler = () => {
-    setShowToDo(true);
-    setCreateToDo(true);
-    setIllustration("/landingPageIllustration.png");
-    setShowIllusCtn(null);
-    setProfile(null);
     window.scrollTo(0, 0);
+    setIllustration("/landingPageIllustration.png");
     setSlidingNavbar(false);
     setShowSignIn(null);
     setShowSignUp(null);
     setShowForgetPassword(null);
     setShowSetForgetPassword(null);
     setShowLandingPageHeading(true);
-    dispatch(asyncUserSignOut());
+    dispatch(asyncUserSignOut(router));
   };
 
   const profileHandler = () => {
-    setShowToDo(null);
-    setCreateToDo(null);
     setIllustration("/profileIllustration.png");
-    setShowIllusCtn(true);
     setSlidingNavbar(false);
     setResetPassword(null);
     setProfile(true);
+    router.push("/my-profile");
   };
 
   const dashboardHandler = () => {
-    setShowToDo(true);
-    setCreateToDo(true);
+    router.push("/dashboard");
     setSlidingNavbar(false);
-    setResetPassword(null);
-    setIllustration("/landingPageIllustration.png");
-    setShowIllusCtn(null);
-    setProfile(null);
   };
 
   const addSlidingNavbar = () => {
@@ -115,191 +88,147 @@ const Header = () => {
     setSlidingNavbar(false);
   };
 
-  const DarkModeHandler = () => {
-    document.documentElement.style.setProperty("--primaryColor", "#ffffff");
-    document.documentElement.style.setProperty(
-      "--secondaryColor",
-      "rgba(0, 48, 143, 0.9)"
-    );
-    document.documentElement.style.setProperty(
-      "--backgroundColor",
-      "rgba(128, 128, 128, 0.1)"
-    );
-    document.documentElement.style.setProperty(
-      "--hoverColor",
-      "rgba(0, 48, 143, 1)"
-    );
-    setSlidingNavbar(false);
-    setDarkMode(false);
-  };
-
-  const LightModeHandler = () => {
-    document.documentElement.style.setProperty(
-      "--primaryColor",
-      "rgba(0, 48, 143, 0.9)"
-    );
-    document.documentElement.style.setProperty("--secondaryColor", "#ffffff");
-    document.documentElement.style.setProperty(
-      "--backgroundColor",
-      "rgba(128, 128, 128, 0.1)"
-    );
-    document.documentElement.style.setProperty(
-      "--hoverColor",
-      "rgba(0, 48, 143, 1)"
-    );
-    setSlidingNavbar(false);
-    setDarkMode(true);
-  };
-
   return (
     <>
-      <div className={style.headCtn}>
-        <div className={style.left}>
-          <h1 className={style.heading}>DailyDoer</h1>
-          <h6 className={style.subHeading}>
-            Daily Task Organizer For Proactive Individuals Seeking Seamless
-            Productivity
-          </h6>
-        </div>
-        <div className={style.right}>
-          {!isAuthenticated ? (
-            <>
-              <button
-                className={`btns ${style.btns}`}
-                onClick={showHomeHandler}
-              >
-                Home
-              </button>
-              <button
-                className={`btns ${style.btns}`}
-                onClick={showSignInHandler}
-              >
-                Sign In
-              </button>
-              <button
-                className={`btns ${style.btns}`}
-                onClick={showSignUpHandler}
-              >
-                Sign Up
-              </button>
-              <button
-                className={`btns ${style.btns}`}
-                onClick={darkMode ? DarkModeHandler : LightModeHandler}
-              >
-                {darkMode ? "Dark Mode" : "Light Mode"}
-              </button>
-            </>
-          ) : (
-            <></>
-          )}
-          {isAuthenticated ? (
-            <>
-              <button
-                className={`btns ${style.btns}`}
-                type="button"
-                onClick={dashboardHandler}
-              >
-                Dashboard
-              </button>
-              <button
-                type="button"
-                className={`btns ${style.btns}`}
-                onClick={profileHandler}
-              >
-                My Profile
-              </button>
-              <button
-                type="button"
-                className={`btns ${style.btns}`}
-                onClick={signOutHandler}
-              >
-                Logout
-              </button>
-              <button
-                className={`btns ${style.btns}`}
-                onClick={darkMode ? DarkModeHandler : LightModeHandler}
-              >
-                {darkMode ? "Dark Mode" : "Light Mode"}
-              </button>
-            </>
-          ) : (
-            <></>
-          )}
-
-          <button
-            type="button"
-            className={`btns ${style.btns}`}
-            onClick={addSlidingNavbar}
-          >
-            Menu
-          </button>
-        </div>
-        {slidingNavbar && (
-          <div className={style.slidingNavbar}>
-            <img
-              src="/closeButtonLogo.png"
-              className={`${style.closeBtn}`}
-              onClick={removeSlidingNavbar}
-            ></img>
-            {!isAuthenticated && (
+      <div className="w-full bg-secondaryColor rounded-lg">
+        <div className="px-5 py-4 md:p-5 lg:p-5 flex items-center justify-between flex-wrap gap-2 mx-auto w-full max-w-[1460px] rounded-lg">
+          <div className="leading-6">
+            <h1 className="font-extrabold text-4xl">DailyDoer</h1>
+            <h6 className="hidden md:flex lg:flex">
+              Daily Task Organizer For Proactive Individuals Seeking Seamless
+              Productivity
+            </h6>
+          </div>
+          <div className="flex items-center">
+            {!isAuthenticated ? (
               <>
                 <button
-                  className="btns btns-slidingNav"
+                  className={`btns ml-5 md:ml-0 lg:ml-0 hidden md:flex lg:flex`}
                   onClick={showHomeHandler}
                 >
                   Home
                 </button>
                 <button
-                  className="btns btns-slidingNav"
+                  className={`btns hidden md:flex lg:flex`}
                   onClick={showSignInHandler}
                 >
                   Sign In
                 </button>
                 <button
-                  className="btns btns-slidingNav"
+                  className={`btns hidden md:flex lg:flex`}
                   onClick={showSignUpHandler}
                 >
                   Sign Up
                 </button>
-                <button
-                  className={`btns btns-slidingNav`}
-                  onClick={darkMode ? DarkModeHandler : LightModeHandler}
-                >
-                  {darkMode ? "Dark Mode" : "Light Mode"}
-                </button>
+                {/* <button className={`btns hidden md:flex lg:flex`} disabled>
+                  Dark Mode
+                </button> */}
               </>
+            ) : (
+              <></>
             )}
-            {isAuthenticated && (
+            {isAuthenticated ? (
               <>
                 <button
-                  className="btns btns-slidingNav"
+                  style={{ margin: "0px" }}
+                  className={`btns hidden md:flex lg:flex`}
+                  type="button"
                   onClick={dashboardHandler}
                 >
                   Dashboard
                 </button>
                 <button
-                  className="btns btns-slidingNav"
+                  type="button"
+                  className={`btns hidden md:flex lg:flex`}
                   onClick={profileHandler}
                 >
                   My Profile
                 </button>
                 <button
                   type="button"
-                  className="btns btns-slidingNav"
+                  className={`btns hidden md:flex lg:flex`}
                   onClick={signOutHandler}
                 >
                   Logout
                 </button>
-                <button
-                  className={`btns btns-slidingNav`}
-                  onClick={darkMode ? DarkModeHandler : LightModeHandler}
-                >
-                  {darkMode ? "Dark Mode" : "Light Mode"}
-                </button>
+                {/* <button className={`btns hidden md:flex lg:flex`} disabled>
+                  Dark Mode
+                </button> */}
               </>
+            ) : (
+              <></>
             )}
+
+            <button
+              type="button"
+              className={`btns flex md:hidden lg:hidden m-0`}
+              style={{ marginLeft: "0px" }}
+              onClick={addSlidingNavbar}
+            >
+              Menu
+            </button>
           </div>
-        )}
+          {slidingNavbar && (
+            <div className={`${style.slidingNavbar} shadow-md`}>
+              <img
+                src="/closeButtonLogo.png"
+                className={`${style.closeBtn}`}
+                onClick={removeSlidingNavbar}
+              ></img>
+              {!isAuthenticated && (
+                <>
+                  <button
+                    className="btns btns-slidingNav"
+                    onClick={showHomeHandler}
+                  >
+                    Home
+                  </button>
+                  <button
+                    className="btns btns-slidingNav"
+                    onClick={showSignInHandler}
+                  >
+                    Sign In
+                  </button>
+                  <button
+                    className="btns btns-slidingNav"
+                    onClick={showSignUpHandler}
+                  >
+                    Sign Up
+                  </button>
+                  {/* <button className={`btns btns-slidingNav`} disabled>
+                    Dark Mode
+                  </button> */}
+                </>
+              )}
+              {isAuthenticated && (
+                <>
+                  <button
+                    className="btns btns-slidingNav"
+                    onClick={dashboardHandler}
+                  >
+                    Dashboard
+                  </button>
+                  <button
+                    className="btns btns-slidingNav"
+                    onClick={profileHandler}
+                  >
+                    My Profile
+                  </button>
+                  <button
+                    type="button"
+                    className="btns btns-slidingNav"
+                    onClick={signOutHandler}
+                  >
+                    Logout
+                  </button>
+                  {/* <button className={`btns btns-slidingNav`} disabled>
+                    Dark Mode
+                  </button> */}
+                </>
+              )}
+            </div>
+          )}
+        </div>
       </div>
     </>
   );

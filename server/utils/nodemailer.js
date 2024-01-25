@@ -11,7 +11,7 @@ exports.sendEmail = (req, res, next, resetPasswordToken) => {
     },
   });
   const mailOptions = {
-    from: "Khare's Enterprises",
+    from: "Daily Doer Pvt. Ltd.",
     to: req.body.email,
     subject: "Forget Password OTP",
     html: `<h1>OTP - ${resetPasswordToken}</h1>`,

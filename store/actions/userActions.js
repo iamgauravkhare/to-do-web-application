@@ -7,46 +7,50 @@ import {
   removeError,
   removeNotification,
   addLoading,
+  removeLoading,
 } from "../reducers";
+import { toast } from "react-toastify";
 
-export const asyncUserSignUp = (signUpData) => async (dispatch, getState) => {
+export const asyncUserSignUp = (signUpData, router) => async (dispatch) => {
   try {
-    // console.log("This is use of getState - " + getState().user.loading);
-    dispatch(addLoading());
     await axios.post("/sign-up", signUpData);
-    dispatch(asyncGetUserData());
-    dispatch(addNotification("Account created successfully"));
+    await dispatch(asyncGetUserData());
+    router.push("/dashboard");
   } catch (error) {
-    dispatch(addError(error.response.data.message));
+    dispatch(addError("Error! Something went wrong"));
+    dispatch(removeLoading());
+    return;
   }
+  dispatch(addNotification("Sign up successfull"));
 };
 
-export const asyncUserSignIn = (signInData) => async (dispatch, getState) => {
+export const asyncUserSignIn = (signInData, router) => async (dispatch) => {
   try {
-    let data = getState().userSlice;
-    console.log(data);
-    dispatch(addLoading());
     await axios.post("/sign-in", signInData);
-    dispatch(asyncGetUserData());
-    dispatch(addNotification("Signed in successfully"));
+    await dispatch(asyncGetUserData());
+    router.push("/dashboard");
   } catch (error) {
     dispatch(addError(error.response.data.message));
+    dispatch(removeLoading());
+    return;
   }
+  dispatch(addNotification("Signed in successfully"));
 };
 
 export const asyncSendForgetPasswordEmail =
-  (email) => async (dispatch, getState) => {
+  (email, showSetForgetPasswordHandler, timeOut, useremail) =>
+  async (dispatch) => {
     try {
       const { data } = await axios.post("/forget-password-email", email);
       dispatch(addNotification(data.message));
       if (data.success === true) {
-        return true;
-      } else {
-        return false;
+        showSetForgetPasswordHandler();
+        timeOut(useremail);
       }
     } catch (error) {
       dispatch(addError(error.response.data.message));
     }
+    dispatch(removeLoading());
   };
 
 export const asyncClearForgetPasswordToken =
@@ -59,7 +63,7 @@ export const asyncClearForgetPasswordToken =
   };
 
 export const asyncUpdateForgetPassword =
-  (updatedPasswordData) => async (dispatch, getState) => {
+  (updatedPasswordData, showSignInHandler) => async (dispatch, getState) => {
     try {
       const { data } = await axios.post(
         "/update-forget-password",
@@ -68,37 +72,43 @@ export const asyncUpdateForgetPassword =
       dispatch(asyncGetUserData());
       dispatch(addNotification(data.message));
       if (data.success === true) {
-        return true;
+        showSignInHandler();
       } else {
         return false;
       }
     } catch (error) {
       dispatch(addError(error.response.data.message));
     }
+    dispatch(removeLoading());
   };
 
 export const asyncGetUserData = () => async (dispatch, getState) => {
   try {
     const { data } = await axios.get("/account-details");
-    console.log(data);
     dispatch(updateUserData(data.payload));
   } catch (error) {
     dispatch(addError(error.response.data.message));
   }
 };
 
-export const asyncGetUserAuthenticated = () => async (dispatch, getState) => {
-  try {
-    const { data } = await axios.get("/authentication-details");
-    if (data.success === true) {
-      return true;
-    } else {
-      return false;
+export const asyncGetUserAuthenticated =
+  (router) => async (dispatch, getState) => {
+    try {
+      const { data } = await axios.get("/authentication-details");
+      if (data.success === true) {
+        await dispatch(asyncGetUserData());
+        router.push("/dashboard");
+        setTimeout(() => {
+          console.log("Timeout chala");
+          dispatch(removeLoading());
+        }, 2000);
+      } else {
+        dispatch(removeLoading());
+      }
+    } catch (error) {
+      dispatch(addError(error.response.data.message));
     }
-  } catch (error) {
-    dispatch(addError(error.response.data.message));
-  }
-};
+  };
 
 export const asyncUpdateProfileDetails =
   (updatedProfileData) => async (dispatch, getState) => {
@@ -125,36 +135,35 @@ export const asyncUploadProfileImage =
       );
       dispatch(asyncGetUserData());
       dispatch(addNotification(data.message));
-      if (data.success === true) {
-        return true;
-      } else {
-        return false;
-      }
     } catch (error) {
       dispatch(addError(error.response.data.message));
     }
+    dispatch(removeLoading());
   };
 
 export const asyncResetPassword =
-  (updatedPasswordData) => async (dispatch, getState) => {
+  (updatedPasswordData, ProfileHandler) => async (dispatch, getState) => {
     try {
       const { data } = await axios.post("/reset-password", updatedPasswordData);
       dispatch(asyncGetUserData());
       dispatch(addNotification(data.message));
       if (data.success === true) {
-        return true;
-      } else {
-        return false;
+        dispatch(removeLoading());
+        ProfileHandler();
       }
+      return;
     } catch (error) {
       dispatch(addError(error.response.data.message));
     }
+    dispatch(removeLoading());
   };
 
 export const asyncCreateTask = (taskData) => async (dispatch, getState) => {
   try {
     const { data } = await axios.post("/create-task", taskData);
-    dispatch(asyncGetUserData());
+    await dispatch(asyncGetUserData());
+    dispatch(removeLoading());
+
     dispatch(addNotification(data.message));
   } catch (error) {
     dispatch(addError(error.response.data.message));
@@ -168,6 +177,18 @@ export const asyncUpdateTask =
         `/update-task/${taskId}`,
         updatedTaskData
       );
+      await dispatch(asyncGetUserData());
+      dispatch(removeLoading());
+      dispatch(addNotification(data.message));
+    } catch (error) {
+      dispatch(addError(error.response.data.message));
+    }
+  };
+
+export const asyncMarkTaskCompleted =
+  (taskId) => async (dispatch, getState) => {
+    try {
+      const { data } = await axios.post(`/mark-task-completed/${taskId}`);
       dispatch(asyncGetUserData());
       dispatch(addNotification(data.message));
     } catch (error) {
@@ -185,9 +206,10 @@ export const asyncDeleteTask = (taskId) => async (dispatch, getState) => {
   }
 };
 
-export const asyncUserSignOut = () => async (dispatch, getState) => {
+export const asyncUserSignOut = (router) => async (dispatch, getState) => {
   try {
     const { data } = await axios.post("/sign-out");
+    router.push("/");
     dispatch(removeUserData());
     dispatch(removeError());
     dispatch(removeNotification());
@@ -197,12 +219,14 @@ export const asyncUserSignOut = () => async (dispatch, getState) => {
   }
 };
 
-export const asyncUserDeleteAccount = () => async (dispatch, getState) => {
-  try {
-    const { data } = await axios.get("/delete-account");
-    dispatch(removeUserData());
-    dispatch(addNotification(data.message));
-  } catch (error) {
-    dispatch(addError(error.response.data.message));
-  }
-};
+export const asyncUserDeleteAccount =
+  (router) => async (dispatch, getState) => {
+    try {
+      const { data } = await axios.get("/delete-account");
+      dispatch(removeUserData());
+      router.push("/");
+      dispatch(addNotification(data.message));
+    } catch (error) {
+      dispatch(addError(error.response.data.message));
+    }
+  };

@@ -2,18 +2,13 @@ import { centralisedData } from "@/app/context";
 import { useContext } from "react";
 
 const LandingPageHeading = () => {
-  const [
-    showSignIn,
+  const {
     setShowSignIn,
-    showLandingPageHeading,
     setShowLandingPageHeading,
-    showSignUp,
     setShowSignUp,
-    showForgetPassword,
     setShowForgetPassword,
-    showSetForgetPassword,
     setShowSetForgetPassword,
-  ] = useContext(centralisedData);
+  } = useContext(centralisedData);
 
   const showSignUpHandler = () => {
     window.scrollTo(0, 0);
@@ -26,8 +21,8 @@ const LandingPageHeading = () => {
 
   return (
     <>
-      <div className="heading-ctn">
-        <h1 className="heading-ctn-heading">
+      <div className="w-full md:w-[50%] lg:w-[50%] flex flex-col items-start gap-2">
+        <h1 className="font-extrabold text-[32px] md:text-[42px] lg:text-[42px] leading-[44px] md:leading-[50px] lg:leading-[50px] tracking-wide">
           Redefining Productivity
           <br />
           Organize, Achieve, And Excel In Your
@@ -37,7 +32,11 @@ const LandingPageHeading = () => {
         <br />
         <h6>Get Started For Free! Sign Up Now</h6>
         <div className="btnWrapper">
-          <button className="btns btns-s-1" onClick={showSignUpHandler}>
+          <button
+            className="btns"
+            style={{ marginLeft: "0px" }}
+            onClick={showSignUpHandler}
+          >
             Sign Up
           </button>
         </div>

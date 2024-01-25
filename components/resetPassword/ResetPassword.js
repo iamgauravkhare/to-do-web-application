@@ -1,5 +1,7 @@
+import { centralisedData } from "@/app/context";
 import { asyncResetPassword } from "@/store/actions";
-import { useRef, useState } from "react";
+import { addLoading, removeLoading } from "@/store/reducers";
+import { useContext, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 
@@ -9,8 +11,15 @@ const ResetPassword = () => {
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [verifyNewPassword, setVerifyNewPassword] = useState("");
+  const { setProfile, setResetPassword } = useContext(centralisedData);
+
+  const ProfileHandler = () => {
+    setProfile(true);
+    setResetPassword(false);
+  };
 
   const submitHandler = (e) => {
+    dispatch(addLoading());
     e.preventDefault();
     const elems = refe.current;
     if (newPassword === verifyNewPassword) {
@@ -18,22 +27,23 @@ const ResetPassword = () => {
         oldPassword: oldPassword,
         newPassword: newPassword,
       };
-      dispatch(asyncResetPassword(updatedPasswordData));
+      dispatch(asyncResetPassword(updatedPasswordData, ProfileHandler));
     } else {
       elems.style.borderColor = "red";
-      toast.error(
-        "Both Fields of new Passwords must be same! Please try again"
-      );
+      toast.error("Confirm password not matched");
+      dispatch(removeLoading());
     }
   };
 
   return (
     <>
-      <div className="form-ctn">
-        <div className="whole-form-wrapper">
-          <form className="form" autoComplete="off">
-            <div className="form-wrapper">
-              <h6 className="form-heading">Reset Your Password</h6>
+      <div className="w-full md:w-[50%] lg:w-[50%] flex items-center justify-center">
+        <div className="w-full md:w-[80%] lg:w-[55%] p-5 md:p-6 lg:p-7 rounded-lg bg-backgroundColor">
+          <form className="w-full" autoComplete="off">
+            <div className="flex flex-col gap-4 w-full">
+              <h6 className="text-center text-xl font-semibold">
+                Reset Your Password
+              </h6>
               <div className="text-field">
                 <label htmlFor="oldpassword">Old Password</label>
                 <input
@@ -96,6 +106,17 @@ const ResetPassword = () => {
               >
                 Reset Password
               </button>
+              <div className="my-form-actions">
+                <h6 className="my-form-signup">
+                  <button
+                    className="forget-btn underline"
+                    onClick={ProfileHandler}
+                    type="button"
+                  >
+                    Back to profile
+                  </button>
+                </h6>
+              </div>
             </div>
           </form>
         </div>

@@ -1,11 +1,13 @@
 const { catchAsyncError } = require("../middlewares/catchAsyncError");
 const userModel = require("../models/userModel");
 const ErrorHandler = require("../utils/errorHandler");
+const jwt = require("jsonwebtoken");
 const { sendEmail } = require("../utils/nodemailer");
 const { createToken } = require("../utils/createToken");
-const imagekit = require("../utils/imagekit").initImagekit();
+const imageKit = require("../utils/imagekit").initImageKit();
 const path = require("path");
 const { v4: uuidv4 } = require("uuid");
+const todosModel = require("../models/todosModel");
 
 // callback functions of indexRoutes
 
@@ -79,7 +81,7 @@ exports.clear_forget_password_token = catchAsyncError(
 
 // account_details
 exports.account_details = catchAsyncError(async (req, res, next) => {
-  const payload = await userModel.findById(req.id).exec();
+  const payload = await userModel.findById(req.id).populate("tasks").exec();
   res.status(200).json({
     success: true,
     payload: payload,
@@ -89,6 +91,16 @@ exports.account_details = catchAsyncError(async (req, res, next) => {
 //authentication_details
 exports.authentication_details = catchAsyncError(async (req, res, next) => {
   if (req.cookies.token) {
+    const { token } = req.cookies;
+    const { id } = jwt.verify(token, process.env.JWT_SECRET);
+    if (!id) {
+      return next(
+        new ErrorHandler(
+          "Token verification failed! Please sign in to continue",
+          401
+        )
+      );
+    }
     res.status(200).json({
       success: true,
       message: "User is authenticated",
@@ -118,9 +130,9 @@ exports.upload_profile_image = catchAsyncError(async (req, res, next) => {
     file.name
   )}`;
   if (payload.profileimage.fileId !== "") {
-    await imagekit.deleteFile(payload.profileimage.fileId);
+    await imageKit.deleteFile(payload.profileimage.fileId);
   }
-  const { fileId, url } = await imagekit.upload({
+  const { fileId, url } = await imageKit.upload({
     file: file.data,
     fileName: modifiedFileName,
   });
@@ -153,11 +165,10 @@ exports.reset_password = catchAsyncError(async (req, res, next) => {
 // create_task
 exports.create_task = catchAsyncError(async (req, res, next) => {
   const payload = await userModel.findById(req.id).exec();
-  payload.tasks.push({
-    ...req.body,
-    addedOn: new Date(Date.now()).toLocaleDateString(),
-    id: uuidv4(),
-  });
+  const task = await todosModel.create(req.body);
+  task.userId = payload._id;
+  payload.tasks.push(task._id);
+  await task.save();
   await payload.save();
   res.status(201).json({
     success: true,
@@ -167,25 +178,34 @@ exports.create_task = catchAsyncError(async (req, res, next) => {
 
 // update_task
 exports.update_task = catchAsyncError(async (req, res, next) => {
-  const payload = await userModel.findById(req.id).exec();
-  const taskIndex = payload.tasks.findIndex((i) => i.id === req.params.id);
-  payload.tasks[taskIndex] = {
-    ...payload.tasks[taskIndex],
-    ...req.body,
-  };
-  await payload.save();
+  const task = await todosModel.findByIdAndUpdate(
+    { _id: req.params.id },
+    req.body
+  );
   res.status(200).json({
     success: true,
     message: "Task updated successfully!",
   });
 });
 
+// mark_task_completed
+exports.mark_task_completed = catchAsyncError(async (req, res, next) => {
+  const task = await todosModel.findByIdAndUpdate(
+    { _id: req.params.id },
+    { completed: true }
+  );
+  res.status(200).json({
+    success: true,
+    message: "Task marked completed!",
+  });
+});
+
 // delete_task
 exports.delete_task = catchAsyncError(async (req, res, next) => {
-  const payload = await userModel.findById(req.id).exec();
-  const filteredTasks = payload.tasks.filter((i) => i.id !== req.params.id);
-  payload.tasks = filteredTasks;
-  await payload.save();
+  await todosModel.findByIdAndDelete(req.params.id);
+  await userModel
+    .findByIdAndUpdate(req.id, { $pull: { tasks: req.params.id } })
+    .exec();
   res.status(200).json({
     success: true,
     message: "Task deleted successfully!",
@@ -194,17 +214,39 @@ exports.delete_task = catchAsyncError(async (req, res, next) => {
 
 // delete_account
 exports.delete_account = catchAsyncError(async (req, res, next) => {
-  await userModel.deleteOne({ _id: req.id }).exec();
-
-  res.clearCookie("token").status(200).json({
-    success: true,
-    message: "Your account deleted successfully",
+  await userModel.deleteOne({ _id: req.id });
+  await todosModel.deleteMany({ userId: req.id });
+  req.session.destroy((err) => {
+    if (err) {
+      console.error("Error destroying session:", err);
+      res.status(500).json({
+        success: false,
+        message: "Session erroe",
+      });
+    } else {
+      res.cookie("token", "", {
+        expires: new Date(0),
+        httpOnly: true,
+        sameSite: "none",
+        secure: true,
+      });
+      res.cookie("connect.sid", "", {
+        expires: new Date(0),
+        httpOnly: true,
+        sameSite: "none",
+        secure: true,
+      });
+      res.status(200).json({
+        success: true,
+        message: "Your account deleted successfully",
+      });
+      console.log(req.session);
+    }
   });
 });
 
 // sign_out
 exports.sign_out = catchAsyncError(async (req, res, next) => {
-  console.log(req.session);
   req.session.destroy((err) => {
     if (err) {
       console.error("Error destroying session:", err);
@@ -229,7 +271,6 @@ exports.sign_out = catchAsyncError(async (req, res, next) => {
         success: true,
         message: "Logged out successfully",
       });
-      console.log(req.session);
     }
   });
 });

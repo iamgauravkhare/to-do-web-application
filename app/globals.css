@@ -1,13 +1,14 @@
-/* colors */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 :root {
-  /* --primaryColor: #00308fe6; */
-  --primaryColor: rgba(0, 48, 143, 0.9);
+  --primaryColor: #00308fe6;
   --secondaryColor: #ffffff;
-  --backgroundColor: rgba(128, 128, 128, 0.1);
-  --hoverColor: rgba(0, 48, 143, 1);
+  --backgroundColor: #8080801a;
+  --hoverColor: #00308f;
 }
 
-/* css-boilerplate */
 * {
   margin: 0;
   padding: 0;
@@ -22,9 +23,8 @@ body {
   scroll-behavior: smooth;
 }
 
-/* parent-scrollbar */
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 6px;
 }
 
 body::-webkit-scrollbar-track {
@@ -39,44 +39,8 @@ body::-webkit-scrollbar-thumb:hover {
   background: var(--hoverColor);
 }
 
-/* parent-container */
-.main-ctn {
-  min-height: 100%;
-  width: 100%;
-  padding: 10px;
-  background-color: var(--backgroundColor);
-  font-family: gilroy !important;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-}
-
-.common-content-ctn {
-  padding: 0px 50px;
-  min-height: 630px;
-  width: 100%;
-  background-color: var(--secondaryColor);
-  margin-top: 10px;
-  border-radius: 10px;
-  display: flex;
-  align-items: center;
-}
-
-.dashboard-ctn {
-  padding: 10px;
-  gap: 10px;
-  align-items: flex-start;
-}
-
-.dashboard-ctn-m {
-  align-items: center;
-  gap: 0px;
-}
-
 .btns {
   flex-shrink: 0;
-  display: block;
   padding: 10px 30px;
   color: var(--primaryColor);
   margin-left: 30px;
@@ -114,28 +78,7 @@ body::-webkit-scrollbar-thumb:hover {
   transition: all cubic-bezier(0.19, 1, 0.22, 1) 0.5s;
 }
 
-.btns-s-1 {
-  margin: 0;
-}
-
-.heading-ctn {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  width: 50%;
-  color: var(--primaryColor);
-}
-
-.heading-ctn-heading {
-  letter-spacing: 2px;
-  font-weight: 750;
-  font-size: 40px;
-}
-
-.heading-ctn > h6 {
-  font-weight: 500;
-  font-size: 15px;
-}
+/* ..... */
 
 .form {
   display: flex;
@@ -247,6 +190,31 @@ body::-webkit-scrollbar-thumb:hover {
   margin-top: 5px;
 }
 
+input[type="date"]::-webkit-calendar-picker-indicator {
+  color: var(--primaryColor);
+  font-size: 20px;
+  margin-right: 15px;
+}
+
+*select option {
+  padding: 10px;
+}
+
+.text-field > select {
+  color: var(--primaryColor);
+  font-size: 15px;
+  font-weight: 500;
+  width: 100%;
+  border: 2px solid var(--primaryColor);
+  height: 48px;
+  background-color: var(--secondaryColor);
+  outline: none;
+  transition: 0.25s;
+  border-radius: 5px;
+  text-indent: 15px;
+  margin-top: 5px;
+}
+
 .text-field > textarea {
   color: black;
   font-size: 15px;
@@ -269,9 +237,9 @@ body::-webkit-scrollbar-thumb:hover {
 .text-field img {
   position: absolute;
   right: -2px;
-  bottom: -4px;
-  width: 30px;
-  height: 30px;
+  bottom: 0px;
+  width: 25px;
+  height: 25px;
   transform: translate(-50%, -50%);
   transform-origin: center;
 }
@@ -306,7 +274,7 @@ body::-webkit-scrollbar-thumb:hover {
   background-color: transparent;
   border: none;
   outline: none;
-  text-decoration: none;
+  /* text-decoration: none; */
   font-size: 15px;
   color: var(--primaryColor);
   font-weight: 500;
@@ -422,11 +390,11 @@ body::-webkit-scrollbar-thumb:hover {
   margin: 0px;
 }
 
-.task-title {
+/* .task-title {
   font-size: 22px;
   color: var(--primaryColor);
   height: 10%;
-}
+} */
 
 .icn-btns {
   display: block;
@@ -482,8 +450,19 @@ body::-webkit-scrollbar-thumb:hover {
   font-weight: 500;
 }
 
-.loader-center{
+.loader-center {
   justify-content: center;
+}
+
+.date-ctn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 30px;
+}
+
+.date-ctn > .text-field > input {
+  text-indent: 5px;
 }
 
 @media only screen and (max-width: 450px) {

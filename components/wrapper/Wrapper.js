@@ -12,12 +12,12 @@ const Wrapper = ({ children }) => {
     <>
       <Provider store={store}>
         <CentralisedData>
-          <div className="main-ctn">
+          <div className="w-full min-h-screen p-2 flex items-center gap-2 flex-col relative bg-backgroundColor text-primaryColor">
             <Header />
             {children}
             <Footer />
           </div>
-          <ToastContainer position="top-center" autoClose="2000" />
+          <ToastContainer position="top-center" autoClose="1000" />
         </CentralisedData>
       </Provider>
     </>

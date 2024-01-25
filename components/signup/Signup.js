@@ -3,21 +3,19 @@ import { centralisedData } from "@/app/context";
 import { asyncUserSignUp } from "@/store/actions";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
+import { addLoading } from "@/store/reducers";
+import { useRouter } from "next/navigation";
 
 const Signup = () => {
   const dispatch = useDispatch();
-  const [
-    showSignIn,
+  const router = useRouter();
+  const {
     setShowSignIn,
-    showLandingPageHeading,
     setShowLandingPageHeading,
-    showSignUp,
     setShowSignUp,
-    showForgetPassword,
     setShowForgetPassword,
-    showSetForgetPassword,
     setShowSetForgetPassword,
-  ] = useContext(centralisedData);
+  } = useContext(centralisedData);
 
   const showSignInHandler = () => {
     window.scrollTo(0, 0);
@@ -29,13 +27,14 @@ const Signup = () => {
   };
 
   const submitHandler = (e) => {
+    dispatch(addLoading());
     e.preventDefault();
     const signUpData = {
       fullname: `${e.target.fullname.value}`,
       email: `${e.target.email.value}`,
       password: `${e.target.password.value}`,
     };
-    dispatch(asyncUserSignUp(signUpData));
+    dispatch(asyncUserSignUp(signUpData, router));
   };
 
   const googleSignIn = () => {
@@ -44,10 +43,10 @@ const Signup = () => {
 
   return (
     <>
-      <div className="form-ctn">
-        <div className="whole-form-wrapper">
-          <form className="form" onSubmit={submitHandler} autoComplete="off">
-            <button className="form-btn" onClick={googleSignIn} type="button">
+      <div className="w-full md:w-[50%] lg:w-[50%] flex items-center justify-center">
+        <div className="w-full md:w-[80%] lg:w-[55%] p-5 md:p-6 lg:p-7 rounded-lg bg-backgroundColor">
+          <form className="w-full" onSubmit={submitHandler} autoComplete="off">
+            {/* <button className="form-btn" onClick={googleSignIn} type="button">
               <img src="/googleLogo.png" alt="Google" />
               Sign In With Google
             </button>
@@ -55,9 +54,11 @@ const Signup = () => {
               <div className="dividerline"></div>
               Or
               <div className="dividerline"></div>
-            </div>
-            <div className="form-wrapper">
-              <h6 className="form-heading">Create Your Account</h6>
+            </div> */}
+            <div className="flex flex-col gap-4 w-full">
+              <h6 className="text-center text-xl font-semibold">
+                Create Your Account
+              </h6>
               <div className="text-field">
                 <label htmlFor="full-name">Full Name</label>
                 <input
@@ -108,7 +109,7 @@ const Signup = () => {
                 <h6 className="my-form-signup">
                   Already have account ?
                   <button
-                    className="forget-btn"
+                    className="forget-btn underline"
                     onClick={showSignInHandler}
                     type="button"
                   >

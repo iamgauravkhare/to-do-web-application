@@ -11,31 +11,29 @@ import { useSelector } from "react-redux";
 import Loader from "@/components/Loader";
 
 const LandingPage = (props) => {
-  const [
+  const {
     showSignIn,
-    setShowSignIn,
     showLandingPageHeading,
-    setShowLandingPageHeading,
     showSignUp,
-    setShowSignUp,
     showForgetPassword,
-    setShowForgetPassword,
     showSetForgetPassword,
-    setShowSetForgetPassword,
     illustration,
-    setIllustration,
-  ] = useContext(centralisedData);
+  } = useContext(centralisedData);
 
   const { loading } = useSelector((state) => state.userSlice);
 
   return (
-    <>
+    <div className="w-full bg-secondaryColor rounded-lg">
       {loading ? (
-        <div className="common-content-ctn loader-center">
+        <div className="w-full min-h-[85vh] max-w-[1460px] p-5 mx-auto rounded-lg bg-secondaryColor flex items-center justify-center">
           <Loader />
         </div>
       ) : (
-        <div className="common-content-ctn">
+        <div
+          className={`w-full min-h-[85vh] max-w-[1460px] p-5 rounded-lg mx-auto bg-secondaryColor flex ${
+            showLandingPageHeading ? "flex-col" : "flex-col-reverse"
+          } md:flex-row lg:flex-row gap-8 md:gap-0 lg:gap-0 items-center justify-center`}
+        >
           {showLandingPageHeading && <LandingPageHeading />}
           <Illustration imageSrc={illustration} />
           {showSignIn && <Signin />}
@@ -44,7 +42,7 @@ const LandingPage = (props) => {
           {showSetForgetPassword && <SetForgetPassword />}
         </div>
       )}
-    </>
+    </div>
   );
 };
 

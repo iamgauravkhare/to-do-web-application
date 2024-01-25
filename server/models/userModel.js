@@ -39,7 +39,12 @@ const userModel = new mongoose.Schema(
       default: 0,
     },
 
-    tasks: [],
+    tasks: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "todos",
+      },
+    ],
   },
   {
     timestamps: true,

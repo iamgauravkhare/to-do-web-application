@@ -14,6 +14,7 @@ const {
   reset_password,
   create_task,
   update_task,
+  mark_task_completed,
   delete_task,
   delete_account,
   sign_out,
@@ -54,6 +55,9 @@ router.post("/create-task", isAuthencated, create_task);
 
 /**@api /api/v1 POST update-task */
 router.post("/update-task/:id", isAuthencated, update_task);
+
+/**@api /api/v1 POST mark_task_completed */
+router.post("/mark-task-completed/:id", isAuthencated, mark_task_completed);
 
 /**@api /api/v1 POST delete-task */
 router.post("/delete-task/:id", isAuthencated, delete_task);
