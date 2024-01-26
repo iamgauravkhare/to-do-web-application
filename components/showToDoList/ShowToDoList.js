@@ -160,6 +160,8 @@ const ShowToDoList = (props) => {
             <h1>{new Date(date).toDateString()}</h1>
             <div className="columns-1 md:columns-2 lg:columns-3 gap-5 relative">
               {groupedTodos &&
+                groupedTodos[date] &&
+                groupedTodos[date].length > 0 &&
                 groupedTodos[date].map((e, i) => {
                   return (
                     <div
