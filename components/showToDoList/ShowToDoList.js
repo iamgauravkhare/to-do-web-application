@@ -159,69 +159,70 @@ const ShowToDoList = (props) => {
           >
             <h1>{new Date(date).toDateString()}</h1>
             <div className="columns-1 md:columns-2 lg:columns-3 gap-5 relative">
-              {groupedTodos[date].map((e, i) => {
-                return (
-                  <div
-                    className="mb-5 overflow-hidden bg-[#F0F8FF] text-[14px]  font-[450] flex flex-col gap-5 rounded-lg p-5 hover:shadow-lg transition-shadow"
-                    key={i}
-                  >
-                    <div className="flex items-center justify-between gap-3 flex-wrap">
-                      <h4 className="text-[16px] font-semibold">{e.title}</h4>
-                      <button
-                        className="text-[10px] flex flex-row-reverse gap-3 font-semibold bg-secondaryColor py-1 px-3 rounded-md border-none items-center"
-                        onClick={() => markCompleteHandler(e._id)}
-                      >
-                        {e.completed ? "Completed" : "Mark Completed"}
-                        {e.completed ? (
-                          <IoCheckmarkDoneSharp className="text-2xl text-[#32de84]" />
-                        ) : (
-                          <IoCheckmarkSharp className="text-2xl" />
-                        )}
-                      </button>
-                    </div>
-                    <div className="flex justify-between items-center gap-3 flex-wrap">
-                      <span>
-                        Added On -
-                        <br />
-                        {new Date(e.createdAt).toDateString()}
-                      </span>
-                      <div className="flex gap-3">
+              {groupedTodos &&
+                groupedTodos[date].map((e, i) => {
+                  return (
+                    <div
+                      className="mb-5 overflow-hidden bg-[#F0F8FF] text-[14px]  font-[450] flex flex-col gap-5 rounded-lg p-5 hover:shadow-lg transition-shadow"
+                      key={i}
+                    >
+                      <div className="flex items-center justify-between gap-3 flex-wrap">
+                        <h4 className="text-[16px] font-semibold">{e.title}</h4>
                         <button
-                          className="p-2 bg-secondaryColor text-[20px] rounded-full"
-                          onClick={() => editHandler(e._id)}
+                          className="text-[10px] flex flex-row-reverse gap-3 font-semibold bg-secondaryColor py-1 px-3 rounded-md border-none items-center"
+                          onClick={() => markCompleteHandler(e._id)}
                         >
-                          <FaEdit />
+                          {e.completed ? "Completed" : "Mark Completed"}
+                          {e.completed ? (
+                            <IoCheckmarkDoneSharp className="text-2xl text-[#32de84]" />
+                          ) : (
+                            <IoCheckmarkSharp className="text-2xl" />
+                          )}
                         </button>
-
-                        {activeIndex === i ? (
-                          <></>
-                        ) : (
+                      </div>
+                      <div className="flex justify-between items-center gap-3 flex-wrap">
+                        <span>
+                          Added On -
+                          <br />
+                          {new Date(e.createdAt).toDateString()}
+                        </span>
+                        <div className="flex gap-3">
                           <button
                             className="p-2 bg-secondaryColor text-[20px] rounded-full"
-                            onClick={() => deleteHandler(e._id)}
+                            onClick={() => editHandler(e._id)}
                           >
-                            <MdDelete />
+                            <FaEdit />
                           </button>
-                        )}
+
+                          {activeIndex === i ? (
+                            <></>
+                          ) : (
+                            <button
+                              className="p-2 bg-secondaryColor text-[20px] rounded-full"
+                              onClick={() => deleteHandler(e._id)}
+                            >
+                              <MdDelete />
+                            </button>
+                          )}
+                        </div>
+                      </div>
+                      <div className="flex justify-between items-center gap-3 flex-wrap">
+                        <p className="">
+                          Due Date -
+                          <br />
+                          {new Date(e.deadline).toDateString()}
+                        </p>
+                        <p className="capitalize">Priority - {e.priority}</p>
+                      </div>
+                      <div className="text-[14px] font-450">
+                        Description -<br />
+                        <pre className="mt-2 text-wrap">
+                          <p>{e.description}</p>
+                        </pre>
                       </div>
                     </div>
-                    <div className="flex justify-between items-center gap-3 flex-wrap">
-                      <p className="">
-                        Due Date -
-                        <br />
-                        {new Date(e.deadline).toDateString()}
-                      </p>
-                      <p className="capitalize">Priority - {e.priority}</p>
-                    </div>
-                    <div className="text-[14px] font-450">
-                      Description -<br />
-                      <pre className="mt-2 text-wrap">
-                        <p>{e.description}</p>
-                      </pre>
-                    </div>
-                  </div>
-                );
-              })}
+                  );
+                })}
             </div>
           </div>
         );
