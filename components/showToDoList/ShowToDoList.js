@@ -25,7 +25,7 @@ const ShowToDoList = (props) => {
   const groupedTodos =
     userData &&
     userData.tasks.reduce((acc, todo) => {
-      const date = new Date(todo.createdAt).toLocaleDateString();
+      const date = new Date(todo.createdAt).toLocaleDateString("en-US");
 
       if (!acc[date]) {
         acc[date] = [];
@@ -39,11 +39,7 @@ const ShowToDoList = (props) => {
   const uniqueDates = userData && Object.keys(groupedTodos);
   // Convert date strings to Date objects
   const dateObjects =
-    uniqueDates &&
-    uniqueDates.map((dateString) => {
-      const [month, day, year] = dateString.split("/");
-      return new Date(`${year}-${month}-${day}`);
-    });
+    uniqueDates && uniqueDates.map((dateString) => new Date(dateString));
 
   // Sort the Date objects in descending order
   const sortedDateObjects = dateObjects && dateObjects.sort((a, b) => b - a);
