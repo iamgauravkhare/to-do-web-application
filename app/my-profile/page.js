@@ -18,12 +18,14 @@ const LandingPage = (props) => {
         <div className="w-full min-h-[85vh] max-w-[1460px] p-5 mx-auto rounded-lg bg-secondaryColor flex items-center justify-center">
           <Loader />
         </div>
-      ) : (
+      ) : userData ? (
         <div className="w-full min-h-[85vh] max-w-[1460px] p-5 rounded-lg mx-auto bg-secondaryColor flex flex-col-reverse md:flex-row lg:flex-row gap-8 md:gap-0 lg:gap-0 items-center justify-center">
           <Illustration imageSrc={"/profileIllustration.png"} />
           {profile && <Profile />}
           {resetPassword && <ResetPassword />}
         </div>
+      ) : (
+        <div className="w-full min-h-[85vh] max-w-[1460px] p-5 rounded-lg mx-auto bg-secondaryColor"></div>
       )}
     </div>
   );

@@ -18,7 +18,6 @@ const CentralisedData = (props) => {
   );
 
   useEffect(() => {
-    dispatch(addLoading());
     dispatch(asyncGetUserAuthenticated(router));
   }, []);
 

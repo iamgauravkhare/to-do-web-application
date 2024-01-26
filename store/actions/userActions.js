@@ -22,6 +22,7 @@ export const asyncUserSignUp = (signUpData, router) => async (dispatch) => {
     return;
   }
   dispatch(addNotification("Sign up successfull"));
+  // dispatch(removeLoading());
 };
 
 export const asyncUserSignIn = (signInData, router) => async (dispatch) => {
@@ -35,6 +36,7 @@ export const asyncUserSignIn = (signInData, router) => async (dispatch) => {
     return;
   }
   dispatch(addNotification("Signed in successfully"));
+  // dispatch(removeLoading());
 };
 
 export const asyncSendForgetPasswordEmail =
@@ -96,17 +98,18 @@ export const asyncGetUserAuthenticated =
     try {
       const { data } = await axios.get("/authentication-details");
       if (data.success === true) {
+        dispatch(addLoading());
         await dispatch(asyncGetUserData());
         router.push("/dashboard");
-        // setTimeout(() => {
-        // }, 2000);
+        setTimeout(() => {
+          dispatch(removeLoading());
+        }, 2000);
       } else {
-        dispatch(removeLoading());
+        router.push("/");
       }
     } catch (error) {
       dispatch(addError(error.response.data.message));
     }
-    dispatch(removeLoading());
   };
 
 export const asyncUpdateProfileDetails =
@@ -132,7 +135,7 @@ export const asyncUploadProfileImage =
         "/upload-profile-image",
         profileImageData
       );
-      dispatch(asyncGetUserData());
+      await dispatch(asyncGetUserData());
       dispatch(addNotification(data.message));
     } catch (error) {
       dispatch(addError(error.response.data.message));
@@ -144,7 +147,7 @@ export const asyncResetPassword =
   (updatedPasswordData, ProfileHandler) => async (dispatch, getState) => {
     try {
       const { data } = await axios.post("/reset-password", updatedPasswordData);
-      dispatch(asyncGetUserData());
+      await dispatch(asyncGetUserData());
       dispatch(addNotification(data.message));
       if (data.success === true) {
         dispatch(removeLoading());
@@ -161,7 +164,6 @@ export const asyncCreateTask = (taskData) => async (dispatch, getState) => {
   try {
     const { data } = await axios.post("/create-task", taskData);
     await dispatch(asyncGetUserData());
-    dispatch(removeLoading());
 
     dispatch(addNotification(data.message));
   } catch (error) {
@@ -177,7 +179,6 @@ export const asyncUpdateTask =
         updatedTaskData
       );
       await dispatch(asyncGetUserData());
-      dispatch(removeLoading());
       dispatch(addNotification(data.message));
     } catch (error) {
       dispatch(addError(error.response.data.message));
@@ -222,8 +223,8 @@ export const asyncUserDeleteAccount =
   (router) => async (dispatch, getState) => {
     try {
       const { data } = await axios.get("/delete-account");
-      dispatch(removeUserData());
       router.push("/");
+      dispatch(removeUserData());
       dispatch(addNotification(data.message));
     } catch (error) {
       dispatch(addError(error.response.data.message));

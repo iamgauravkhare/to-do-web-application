@@ -29,7 +29,6 @@ const CreateToDo = (props) => {
   } = props;
 
   const submitHandler = async () => {
-    dispatch(addLoading());
     const taskData = {
       title: taskTitle,
       description: taskDescription,
@@ -47,7 +46,6 @@ const CreateToDo = (props) => {
   };
 
   const saveEditDataHandler = () => {
-    dispatch(addLoading());
     const updatedTaskData = {
       title: taskTitle,
       description: taskDescription,

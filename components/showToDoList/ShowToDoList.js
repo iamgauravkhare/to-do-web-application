@@ -133,6 +133,11 @@ const ShowToDoList = (props) => {
     // router.push("/create-task");
   };
 
+  const showModalHandler = () => {
+    setShowModal(true);
+    scrollTo(0, 0);
+  };
+
   const markCompleteHandler = (id) => {
     dispatch(asyncMarkTaskCompleted(id));
   };
@@ -238,8 +243,9 @@ const ShowToDoList = (props) => {
             <div className="flex items-center flex-col md:flex-row lg:flex-row gap-5">
               <button
                 className="btns"
+                type="button"
                 style={{ margin: "0px" }}
-                onClick={() => setShowModal(true)}
+                onClick={showModalHandler}
               >
                 Add Task
               </button>
