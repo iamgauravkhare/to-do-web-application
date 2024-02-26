@@ -4,7 +4,7 @@
 
 @font-face {
   font-family: "gilroy"; /* Provide a unique name for your font */
-  src: url("../public/Gilroy-Black.otf") format("otf"); /* Specify the path to your font file and its format */
+  src: url("../public/Gilroy-Black.otf"); /* Specify the path to your font file and its format */
   /* You can include additional font formats for better browser compatibility, such as woff2, ttf, etc. */
 }
 
