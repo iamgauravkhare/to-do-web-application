@@ -9,7 +9,6 @@ import {
   addLoading,
   removeLoading,
 } from "../reducers";
-import { toast } from "react-toastify";
 
 export const asyncUserSignUp = (signUpData, router) => async (dispatch) => {
   try {
@@ -22,7 +21,6 @@ export const asyncUserSignUp = (signUpData, router) => async (dispatch) => {
     return;
   }
   dispatch(addNotification("Sign up successfull"));
-  // dispatch(removeLoading());
 };
 
 export const asyncUserSignIn = (signInData, router) => async (dispatch) => {
@@ -36,7 +34,6 @@ export const asyncUserSignIn = (signInData, router) => async (dispatch) => {
     return;
   }
   dispatch(addNotification("Signed in successfully"));
-  // dispatch(removeLoading());
 };
 
 export const asyncSendForgetPasswordEmail =

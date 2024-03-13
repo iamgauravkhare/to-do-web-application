@@ -93,7 +93,9 @@ const Header = () => {
       <div className="w-full bg-secondaryColor rounded-lg">
         <div className="px-5 py-4 md:p-5 lg:p-5 flex items-center justify-between flex-wrap gap-2 mx-auto w-full max-w-[1460px] rounded-lg">
           <div className="leading-6">
-            <h1 className="font-extrabold text-4xl">DailyDoer</h1>
+            <h1 className="text-4xl" style={{ fontFamily: "gilroy-black" }}>
+              DailyDoer
+            </h1>
             <h6 className="hidden md:flex lg:flex">
               Daily Task Organizer For Proactive Individuals Seeking Seamless
               Productivity

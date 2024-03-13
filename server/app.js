@@ -14,10 +14,9 @@ const PORT = process.env.PORT || 4000;
 
 const allowedOrigins = [
   "http://localhost:3000",
-  "https://daily-doer.vercel.app",
+  "https://iamgauravkhare-daily-doer.vercel.app",
   "https://daily-doer-iamgauravkhare.vercel.app",
   "https://daily-doer-git-master-iamgauravkhare.vercel.app",
-  "https://*.onrender.com",
 ];
 
 const corsOptions = {
